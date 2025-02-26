@@ -1,20 +1,30 @@
-
 import BadRequestError from "../errors/BadRequestError.js";
 
 class UserService {
   constructor(userRepository) {
     this.userRepository = userRepository;
     this.createUser = this.createUser.bind(this);
+    this.listUsers = this.listUsers.bind(this);
+  }
+
+  async listUsers() {
+    const usersList = await this.userRepository.listUsers();
+
+    return usersList;
   }
 
   async createUser(postData) {
-    if (!postData.username || !postData.email || !postData.phone_number || !postData.cpf) {
+    if (
+      !postData.username ||
+      !postData.email ||
+      !postData.phone_number ||
+      !postData.cpf
+    ) {
       throw new BadRequestError("BadRequest blank");
     }
 
     await this.checkUniqueUsername(postData.username);
     await this.checkUniqueEmail(postData.email);
-
 
     await this.userRepository.insertUser(postData);
 

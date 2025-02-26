@@ -2,6 +2,17 @@ class UserController {
   constructor(userService) {
     this.userService = userService;
     this.createUser = this.createUser.bind(this);
+    this.listUsers = this.listUsers.bind(this);
+  }
+
+  async listUsers(request, response, next) {
+    try {
+      const usersList = await this.userService.listUsers();
+
+      return response.json(usersList);
+    } catch (error) {
+      next(error);
+    }
   }
 
   async createUser(request, response, next) {
